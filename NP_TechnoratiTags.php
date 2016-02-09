@@ -161,11 +161,11 @@ class NP_TechnoratiTags extends NucleusPlugin {
           * Could even use TOP 5 to limit the query if so.
           * Instead, have to do this manually.
           */
-                $query = "SELECT t.tags FROM ".$this->tablename . " as t";
-                
-                if ($blogid != 0) {
-                        $query .= ", ". sql_table('item') . " as i WHERE t.itemid = i.inumber and i.idraft != 1 and i.iblog = ". $blogid;
-                }
+        $query = "SELECT t.tags FROM ".$this->tablename . " as t";
+        
+        if ($blogid != 0) {
+                $query .= ", ". sql_table('item') . " as i WHERE t.itemid = i.inumber and i.idraft != 1 and i.iblog = ". $blogid;
+        }
 
         $result = sql_query($query);
         if (!$result) {
@@ -183,11 +183,11 @@ class NP_TechnoratiTags extends NucleusPlugin {
 
         $tagcloud = array_count_values( $alltags );
 
-                $s_perc = $this->getOption('TagShowPercentage');
-                if ($s_perc < 100) {
-                        $show = count($tagcloud) / 100 * $s_perc;
-                        $tagcloud = array_slice($tagcloud, 0, $show, true);
-                }
+        $s_perc = $this->getOption('TagShowPercentage');
+        if ($s_perc < 100) {
+                $show = count($tagcloud) / 100 * $s_perc;
+                $tagcloud = array_slice($tagcloud, 0, $show, true);
+        }
 
         /*
          * may need some better error handling? hmm...
@@ -248,25 +248,24 @@ EOD;
         //$tags = mysql_escape_string(htmlspecialchars(urldecode($tags))); NEED TO FIX THIS AND ADD THE SAME TO event_PreUpdateItem()
         sql_query("INSERT INTO ".$this->tablename." (itemid,tags) VALUES (".$itemid.",'".$tags."')");
 
-                if ($this->getOption('DelIcioUs') == "yes") {
-                        global $manager, $CONF;
-                        $url = createItemLink($itemid);
+        if ($this->getOption('DelIcioUs') == "yes") {
+            global $manager, $CONF;
+            $url = createItemLink($itemid);
 
-                        // get item info
+            // get item info
+            $item = &$manager->getItem($itemid, 0, 0);
+            $title = $data['title'] != '' ? $data['title'] : $item['title'];
 
-                        $item = &$manager->getItem($itemid, 0, 0);
-                        $title = $data['title'] != '' ? $data['title'] : $item['title'];
-
-                        $authorid = $item['authorid'];
-                        $user = $this->getMemberOption($authorid,'DeliciousUser');
-                        $password = $this->getMemberOption($authorid,'DeliciousPassword');
+            $authorid = $item['authorid'];
+            $user = $this->getMemberOption($authorid,'DeliciousUser');
+            $password = $this->getMemberOption($authorid,'DeliciousPassword');
 
             // only tag the post on delicious if tag is set
-                        if ($user != '' && $password !='' && isset($tag_arr)) {
-                                $oPhpDelicious = new PhpDelicious($user, $password);
-                                $oPhpDelicious->AddPost($url, $title, '', $tag_arr);
-                        }
-                }
+            if ($user != '' && $password !='' && isset($tag_arr)) {
+                    $oPhpDelicious = new PhpDelicious($user, $password);
+                    $oPhpDelicious->AddPost($url, $title, '', $tag_arr);
+            }
+        }
     }
 
     /**
@@ -298,37 +297,37 @@ EOD;
         } // update
         sql_query($query);
 
-                if ($this->getOption('DelIcioUs') == "yes") {
-                        global $manager;
-                        $url = createItemLink($itemid);
+        if ($this->getOption('DelIcioUs') == "yes") {
+            global $manager;
+            $url = createItemLink($itemid);
 
-                        // get item info
-                        $item = &$manager->getItem($itemid, 0, 0);
-                        $title = $data['title'] != '' ? $data['title'] : $item['title'];
+            // get item info
+            $item = &$manager->getItem($itemid, 0, 0);
+            $title = $data['title'] != '' ? $data['title'] : $item['title'];
 
-                        $authorid = $item['authorid'];
-                        $user = $this->getMemberOption($authorid,'DeliciousUser');
-                        $password = $this->getMemberOption($authorid,'DeliciousPassword');
+            $authorid = $item['authorid'];
+            $user = $this->getMemberOption($authorid,'DeliciousUser');
+            $password = $this->getMemberOption($authorid,'DeliciousPassword');
 
-                        if ($user != '' && $password != '') {
-                                $oPhpDelicious = new PhpDelicious($user, $password);
+            if ($user != '' && $password != '') {
+                $oPhpDelicious = new PhpDelicious($user, $password);
                 if(isset($tag_arr)) {
                                     $oPhpDelicious->AddPost($url, $title, '', $tag_arr);
                 } else {
                     // remove the link is no tag for this post, link with no tag is just useless
                                     $oPhpDelicious->DeletePost($url);
                 }
-                        }
-                }
+            }
+        }
     }
 
-        // need to get url and authorid before we delete the item....
-        function event_PreDeleteItem($data) {
-                global $manager;
-                $this->delurl = createItemLink($data['itemid']);
-                $item = &$manager->getItem($data['itemid'], 0, 0);
-                $this->delaid = $item['authorid'];
-        }
+    // need to get url and authorid before we delete the item....
+    function event_PreDeleteItem($data) {
+            global $manager;
+            $this->delurl = createItemLink($data['itemid']);
+            $item = &$manager->getItem($data['itemid'], 0, 0);
+            $this->delaid = $item['authorid'];
+    }
 
     /**
      * Remove the technoratitags rows for the specified post, as well as from del.icio.us
@@ -337,20 +336,20 @@ EOD;
         $itemid = $data['itemid'];
         sql_query('DELETE FROM '.$this->tablename.' WHERE itemid = '.$itemid);
 
-                if ($this->getOption('DelIcioUs') == "yes") {
-                        // get user/password
-                        $user = $this->getMemberOption($this->delaid,'DeliciousUser');
-                        $password = $this->getMemberOption($this->delaid,'DeliciousPassword');
+        if ($this->getOption('DelIcioUs') == "yes") {
+            // get user/password
+            $user = $this->getMemberOption($this->delaid,'DeliciousUser');
+            $password = $this->getMemberOption($this->delaid,'DeliciousPassword');
 
-                        if ($user != '' && $password != '') {
-                                $oPhpDelicious = new PhpDelicious($user, $password);
-                                $oPhpDelicious->DeletePost($this->delurl);
+            if ($user != '' && $password != '') {
+                $oPhpDelicious = new PhpDelicious($user, $password);
+                $oPhpDelicious->DeletePost($this->delurl);
                 ACTIONLOG::add(INFO, 'delurl: ' . $this->delurl);
-                        }
-                }
+            }
+        }
     }
 
-    /** 
+    /**
      * Insert the tags into the item-body so that they are
      * also displayed in the short view without having to alter
      * any templates ;-) Lazy one inside ^_^
@@ -391,12 +390,12 @@ EOD;
                 }
             }
             $content = str_replace('%l',$list,$content);
-                        if ($this->getOption('AppendTagType') == 0) {
-                                $content = str_replace('%TAGURL%',$this->technoratiurl, $content);
-                        }
-                        else {
-                                $content = str_replace('%TAGURL%',$this->deliciousurl, $content);
-                        }
+            if ($this->getOption('AppendTagType') == 0) {
+                    $content = str_replace('%TAGURL%',$this->technoratiurl, $content);
+            }
+            else {
+                    $content = str_replace('%TAGURL%',$this->deliciousurl, $content);
+            }
             $body = $body.$content;
         }
         else {
@@ -501,9 +500,9 @@ EOD;
                     // need to strip / as well since we are appending tags/ or tags.php?tag= here...
                         $tag=str_replace('%TAGURL%/',$link,$tag);
                 }
-                                else {
-                        $tag=str_replace('%TAGURL%',$this->technoratiurl,$tag);
-                                }
+                else {
+                    $tag=str_replace('%TAGURL%',$this->technoratiurl,$tag);
+                }
                 $tag=str_replace('%d',$displayed_tag,$tag);
                 $list.=$tag;
                 /* If this isn't the last tag, append the seperator */
@@ -526,17 +525,17 @@ EOD;
      * @author Adam Harvey
      */
     function doSkinVar($skinType, $type = 'cloud', $sort = 'alp', $maxtags = -1, $blogid="current") {
-                global $blog, $manager, $CONF;
+        global $blog, $manager, $CONF;
 
         if (!$blog) {
             echo "<!-- TechnoratiTags fatal error: no blog object?? -->";
             //ACTIONLOG::add(WARNING, 'TechnoratiTags Error:' . serverVar("REQUEST_URI"));
         }
 
-                if ($type == 'tagsearch') {
-                        if ($CONF['URLMode'] == 'pathinfo') {
-                                $uri  = serverVar('REQUEST_URI');
-                                $temp = explode('/', $uri);
+        if ($type == 'tagsearch') {
+            if ($CONF['URLMode'] == 'pathinfo') {
+                $uri  = serverVar('REQUEST_URI');
+                $temp = explode('/', $uri);
                 $i = array_search('tags', $temp);
                 $i++;
                 if (function_exists('mb_convert_encoding')) {
@@ -547,75 +546,75 @@ EOD;
                     // we can fix unless we bundle mb_convert_encoding()
                     $tag = urlencode($temp[$i]);
                 }
-
+        
                 if ($blog->getId() != 1) {
                     $i = array_search('blogid', $temp);
                     $i++;
                     $blogid = $temp[$i];
                 }
-                        }
-                        else {
-                                $tag = str_replace(' ','+',RequestVar('tag'));
-                                if (function_exists('mb_convert_encoding')) {
-                                         $tag = mb_convert_encoding($tag, _CHARSET, _CHARSET);
-                                         $tag = rawurldecode($tag);
-                                }
-                                else {
-                                         // This will not work for UTF-8 tag..... not something
-                                         // we can fix unless we bundle mb_convert_encoding()
-                                         $tag = urlencode($tag);
-                                }
-                        }
-
-                        if ($tag == '') {
-                                return;
-                        }
-
-                        if ($this->getOption('PlusSwitch') == 'yes'){
-                                $displayed_tag = str_replace('+','&nbsp;',$tag);
-                        }
-                        else {
-                                $displayed_tag = $tag;
-                        }
-                        
-                        echo "<div class=\"contenttitle\"><h2>" . $this->getOption('SearchTitleText') . " " . $displayed_tag . "</h2></div>";
-
-                        // **** need better than tags like %% ??? *****
-                        $query = "select t.itemid, i.ititle from " . $this->tablename . " as t, ". sql_table('item')
-                                 . " as i where tags like \"%" . $tag . "%\" and t.itemid = i.inumber and i.idraft != 1 ";
-                        if (is_numeric($blogid)) {
-                                $query .= " and i.iblog = " . $blogid;
-                        } else {
-                                $query .= " and i.iblog = " . $blog->getID();
-                        }
-                        // else for "all", which has not i.iblog=xyz
-
-                        $query .= " order by i.itime desc";
-
-                        // else for "all" or anything we will show tagged posts from all blogs....
-                        // it's a feature, not a bug..... I could have choke it here...
-
-                        $res = sql_query($query);
-                        echo "<br /><br /><ul>";
-
-                        while ($row = mysql_fetch_object($res)){
-                                $link = createItemLink($row->itemid);
-                                echo "<li><a href=\"" . $link . "\">" . $row->ititle . "</a></li>";
-                        }
-                        echo "</ul>";
-
+            }
+            else {
+                $tag = str_replace(' ','+',RequestVar('tag'));
+                if (function_exists('mb_convert_encoding')) {
+                     $tag = mb_convert_encoding($tag, _CHARSET, _CHARSET);
+                     $tag = rawurldecode($tag);
                 }
+                else {
+                     // This will not work for UTF-8 tag..... not something
+                     // we can fix unless we bundle mb_convert_encoding()
+                     $tag = urlencode($tag);
+                }
+            }
+
+            if ($tag == '') {
+                return;
+            }
+
+            if ($this->getOption('PlusSwitch') == 'yes'){
+                $displayed_tag = str_replace('+','&nbsp;',$tag);
+            }
+            else {
+                $displayed_tag = $tag;
+            }
+            
+            echo "<div class=\"contenttitle\"><h2>" . $this->getOption('SearchTitleText') . " " . $displayed_tag . "</h2></div>";
+
+            // **** need better than tags like %% ??? *****
+            $query = "select t.itemid, i.ititle from " . $this->tablename . " as t, ". sql_table('item')
+                     . " as i where tags like \"%" . $tag . "%\" and t.itemid = i.inumber and i.idraft != 1 ";
+            if (is_numeric($blogid)) {
+                $query .= " and i.iblog = " . $blogid;
+            } else {
+                $query .= " and i.iblog = " . $blog->getID();
+            }
+            // else for "all", which has not i.iblog=xyz
+
+            $query .= " order by i.itime desc";
+
+            // else for "all" or anything we will show tagged posts from all blogs....
+            // it's a feature, not a bug..... I could have choke it here...
+
+            $res = sql_query($query);
+            echo "<br /><br /><ul>";
+
+            while ($row = mysql_fetch_object($res)){
+                    $link = createItemLink($row->itemid);
+                    echo "<li><a href=\"" . $link . "\">" . $row->ititle . "</a></li>";
+            }
+            echo "</ul>";
+
+        }
         else if ($type == 'cloud' || $type == 'dcloud' || $type == 'localcloud') {
 
-                        if ($blogid == "current") {
-                                $blogid = $blog->getID();
-                        }
-                        else if (is_numeric($blogid)) {
-                // $blogid provided by user
-                        }
-                        else {
-                                $blogid = 0;
-                        }
+            if ($blogid == "current") {
+                    $blogid = $blog->getID();
+            }
+            else if (is_numeric($blogid)) {
+            // $blogid provided by user
+            }
+            else {
+                    $blogid = 0;
+            }
 
             // get all tags and counts
             $tags = $this->getAllTags($blogid);
@@ -663,9 +662,9 @@ EOD;
                 else if ($level == 1) { echo "<span class=\"smallT\">"; $sc++; }
                 else { echo "<span class=\"tinyT\">"; $tc++; }
 
-                                if ($this->getOption('ShowCount') == "yes") {
-                                        $count = " [".$tags[$curtag]. "]";
-                                }
+                if ($this->getOption('ShowCount') == "yes") {
+                    $count = " [".$tags[$curtag]. "]";
+                }
 
                 if ($this->getOption('PlusSwitch') == 'yes'){
                     $displayed_tag = str_replace('+','&nbsp;',$curtag);
@@ -674,27 +673,26 @@ EOD;
                     $displayed_tag = $curtag;
                 }
 
-                                if ($type == 'cloud') {
-                        echo "<a href=\"" . $this->technoratiurl . "/$curtag\" title=\"Find tag $curtag on Technorati\" style=\"background: none;padding: 0px; margin: 0px; text-decoration: none;\">" . $displayed_tag . $count."</a>";
-                                }
-                                else if ($type == 'dcloud') {
-                        echo "<a href=\"" . $this->deliciousurl . "/$curtag\" title=\"Find tag $curtag on del.icio.us\" style=\"background: none;padding: 0px; margin: 0px; text-decoration: none;\">".$displayed_tag.$count."</a>";
-                                } else {
-                                        if ($CONF['URLMode'] == 'pathinfo') {
+                if ($type == 'cloud') {
+                    echo "<a href=\"" . $this->technoratiurl . "/$curtag\" title=\"Find tag $curtag on Technorati\" style=\"background: none;padding: 0px; margin: 0px; text-decoration: none;\">" . $displayed_tag . $count."</a>";
+                }
+                else if ($type == 'dcloud') {
+                    echo "<a href=\"" . $this->deliciousurl . "/$curtag\" title=\"Find tag $curtag on del.icio.us\" style=\"background: none;padding: 0px; margin: 0px; text-decoration: none;\">".$displayed_tag.$count."</a>";
+                } else {
+                    if ($CONF['URLMode'] == 'pathinfo') {
                         $link = $blog->getURL();
-                                                $link .=  '/tags/' . $curtag;
-                                        } else {
+                        $link .=  '/tags/' . $curtag;
+                    } else {
                         $link = $CONF['Self'] . '/';
                                                 $link .= 'tags.php?tag=' . $curtag;
                         if ($blog->getId() != 1) {
                             $link .= "&blogid=" . $blog->getId();
                         }
-                                        }
-                                        echo "<a href=\"" . $link . "\" style=\"background: none;padding: 0px; margin: 0px; text-decoration: none;\">".$displayed_tag.$count."</a>";
-                                }
+                    }
+                    echo "<a href=\"" . $link . "\" style=\"background: none;padding: 0px; margin: 0px; text-decoration: none;\">".$displayed_tag.$count."</a>";
+                }
                 echo "</span>\n"; // finish it off
             }
-
             echo '<!-- '.$tc.'-'.$sc.'-'.$mc.'-'.$lc.' -->';
         }
     }
@@ -706,8 +704,8 @@ EOD;
 
         $maxTags = intval($this->getOption('maxTags'));
 
-                $query = "SELECT tags FROM `" . $this->tablename . "`";
-                $result = sql_query($query);
+        $query = "SELECT tags FROM `" . $this->tablename . "`";
+        $result = sql_query($query);
 
         while ($row = mysql_fetch_object($result)) {
             if ($row->tags == "") continue;
@@ -720,26 +718,26 @@ EOD;
 
     }
 
-        function event_AdminPrePageHead(&$data) {
-                global $CONF;
+    function event_AdminPrePageHead(&$data) {
+            global $CONF;
 
         $this->init_AC();
 
-                if (($data['action'] != 'itemedit') && ($data['action'] != 'createitem'))
-                 return;
+        if (($data['action'] != 'itemedit') && ($data['action'] != 'createitem'))
+         return;
 
-                $tag_array = $this->tag_array;
-                $tag_string = '';
+        $tag_array = $this->tag_array;
+        $tag_string = '';
 
-                foreach ($tag_array as $tag ) {
-                      $tag_string = $tag_string ? $tag_string . ',' . '"'.$tag.'"' : '"'.$tag.'"';
-                }
-
-                $data['extrahead'] .= '<script type="text/javascript">var collection = new Array('.$tag_string .');</script>';
-                $data['extrahead'] .= '<script type="text/javascript" src="'.$CONF['AdminURL'].'plugins/technoratitags/actb.js"></script>';
-                $data['extrahead'] .= '<script type="text/javascript" src="'.$CONF['AdminURL'].'plugins/technoratitags/common.js"></script>';
-                $data['extrahead'] .= '<style> #tat_table { width:250px; } </style> ';
+        foreach ($tag_array as $tag ) {
+              $tag_string = $tag_string ? $tag_string . ',' . '"'.$tag.'"' : '"'.$tag.'"';
         }
+
+        $data['extrahead'] .= '<script type="text/javascript">var collection = new Array('.$tag_string .');</script>';
+        $data['extrahead'] .= '<script type="text/javascript" src="'.$CONF['AdminURL'].'plugins/technoratitags/actb.js"></script>';
+        $data['extrahead'] .= '<script type="text/javascript" src="'.$CONF['AdminURL'].'plugins/technoratitags/common.js"></script>';
+        $data['extrahead'] .= '<style> #tat_table { width:250px; } </style> ';
+    }
 
 //        function event_BookmarkletExtraHead(&$data) {
 //                $data['action'] = 'createitem';
@@ -748,9 +746,9 @@ EOD;
 //
 // updated with fix 2016-02-08
 //
-        function event_BookmarkletExtraHead(&$data) {
-                $data['action'] = 'createitem';
-                $this->event_AdminPrePageHead($data);
-        }
+    function event_BookmarkletExtraHead(&$data) {
+            $data['action'] = 'createitem';
+            $this->event_AdminPrePageHead($data);
+    }
 }
 ?>
