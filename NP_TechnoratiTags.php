@@ -57,9 +57,9 @@ class NP_TechnoratiTags extends NucleusPlugin {
      */
     function install(){
         sql_query('CREATE TABLE IF NOT EXISTS '.$this->tablename.' (itemid INT(9) NOT NULL, tags VARCHAR(255) , INDEX(itemid))');
-        $this->createOption('ListLook','Look of the list:','textarea','<br/><br/>tags: %l');
+        $this->createOption('ListLook','Look of the list:','textarea',"<br />\n<br />\ntags: %l");
         $this->createOption('TagSeparator','Separator of the tags when being displayed:','textarea',', ');
-                $taglook = "<a href=\"%TAGURL%/%t\" rel=\"tag\">%d</a>";
+        $taglook = '<a href="%TAGURL%/%t" rel="tag">%d</a>';
         $this->createOption('TagLook','Look of the tags (%TAGURL% is the URL to Technorati/del.icio.us, leave alone):','textarea',$taglook);
         $this->createOption('NoneText','Text string for no tag','text','none');
         $this->createOption('Cleanup','Tags table should be removed when uninstalling this plugin','yesno','no');
@@ -654,17 +654,17 @@ EOD;
 
                 $style = 'background: none;padding: 0px; margin: 0px; text-decoration: none;';
                 if ($type == 'cloud') {
-                    echo "<a href=\"" . $this->technoratiurl . "/$curtag\" title=\"Find tag $curtag on Technorati\" style=\"$style\">" . $displayed_tag . $count."</a>";
+                    echo sprintf('<a href="%s/%s" title="Find tag %s on Technorati" style="%s">%s</a>',$this->technoratiurl,$curtag,$curtag,$style,$displayed_tag,$count);
                 }
-                else if ($type == 'dcloud') {
-                    echo "<a href=\"" . $this->deliciousurl . "/$curtag\" title=\"Find tag $curtag on del.icio.us\" style=\"$style\">".$displayed_tag.$count."</a>";
+                elseif ($type == 'dcloud') {
+                    echo sprintf('<a href="%s/%s" title="Find tag %s on del.icio.us" style="%s">%s</a>',$this->deliciousurl,$curtag,$curtag,$style,$displayed_tag,$count);
                 } else {
                     if ($CONF['URLMode'] == 'pathinfo') {
                         $link = $blog->getURL();
                         $link .=  '/tags/' . $curtag;
                     } else {
                         $link = $CONF['Self'] . '/';
-                                                $link .= 'tags.php?tag=' . $curtag;
+                        $link .= 'tags.php?tag=' . $curtag;
                         if ($blog->getId() != 1) {
                             $link .= "&blogid=" . $blog->getId();
                         }
@@ -699,7 +699,7 @@ EOD;
     }
 
     function event_AdminPrePageHead(&$data) {
-            global $CONF;
+        global $CONF;
 
         $this->init_AC();
 
@@ -710,7 +710,7 @@ EOD;
         $tag_string = '';
 
         foreach ($tag_array as $tag ) {
-            $tag_string = $tag_string ? $tag_string . ',' . '"'.$tag.'"' : '"'.$tag.'"';
+            $tag_string = $tag_string ? sprintf('%s,"%s"', $tag_string, $tag) : sprintf('"%s"', $tag);
         }
 
         $data['extrahead'] .= '<script type="text/javascript">var collection = new Array('.$tag_string .');</script>';
