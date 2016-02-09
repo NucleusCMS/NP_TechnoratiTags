@@ -57,10 +57,10 @@ class NP_TechnoratiTags extends NucleusPlugin {
      */
     function install(){
         sql_query('CREATE TABLE IF NOT EXISTS '.$this->tablename.' (itemid INT(9) NOT NULL, tags VARCHAR(255) , INDEX(itemid))');
-        $this->createOption('ListLook','Look of the list:','textarea',"<br />\n<br />\ntags: %l");
+        $this->createOption('ListLook','Look of the list:','textarea',"<br />\n<br />\ntags: <%l%>");
         $this->createOption('TagSeparator','Separator of the tags when being displayed:','textarea',', ');
-        $taglook = '<a href="%TAGURL%/%t" rel="tag">%d</a>';
-        $this->createOption('TagLook','Look of the tags (%TAGURL% is the URL to Technorati/del.icio.us, leave alone):','textarea',$taglook);
+        $taglook = '<a href="<%TAGURL%>/<%t%>" rel="tag"><%d%></a>';
+        $this->createOption('TagLook','Look of the tags (<%TAGURL%> is the URL to Technorati/del.icio.us, leave alone):','textarea',$taglook);
         $this->createOption('NoneText','Text string for no tag','text','none');
         $this->createOption('Cleanup','Tags table should be removed when uninstalling this plugin','yesno','no');
         $this->createOption('PlusSwitch','Display "+" as " " (space)?','yesno','no');
@@ -360,20 +360,20 @@ EOD;
                 else {
                     $displayed_tag = $t;
                 }
-                $tag=str_replace('%t',$t,$itemlook);
-                $tag=str_replace('%d',$displayed_tag,$tag);
+                $tag=str_replace('<%t%>',$t,$itemlook);
+                $tag=str_replace('<%d%>',$displayed_tag,$tag);
                 $list.=$tag;
                 /* If this isn't the last tag, append the seperator */
                 if ($i < count($tags)-1){
                     $list.=$separator;
                 }
             }
-            $content = str_replace('%l',$list,$content);
+            $content = str_replace('<%l%>',$list,$content);
             if ($this->getOption('AppendTagType') == 0) {
-                $content = str_replace('%TAGURL%',$this->technoratiurl, $content);
+                $content = str_replace('<%TAGURL%>',$this->technoratiurl, $content);
             }
             else {
-                $content = str_replace('%TAGURL%',$this->deliciousurl, $content);
+                $content = str_replace('<%TAGURL%>',$this->deliciousurl, $content);
             }
             $body = $body.$content;
         }
@@ -459,10 +459,10 @@ EOD;
                 else {
                     $displayed_tag = $t;
                 }
-                $tag=str_replace('%t',$t,$itemlook);
+                $tag=str_replace('<%t%>',$t,$itemlook);
 
                 if ($what=="dtag") {
-                    $tag=str_replace('%TAGURL%',$this->deliciousurl,$tag);
+                    $tag=str_replace('<%TAGURL%>',$this->deliciousurl,$tag);
                 }
                 else if ($what=="ltag") {
                     $link = $blog->getURL();
@@ -477,19 +477,19 @@ EOD;
                         $link .= 'tags.php?tag=';
                     }
                     // need to strip / as well since we are appending tags/ or tags.php?tag= here...
-                        $tag=str_replace('%TAGURL%/',$link,$tag);
+                        $tag=str_replace('<%TAGURL%>/',$link,$tag);
                 }
                 else {
-                    $tag=str_replace('%TAGURL%',$this->technoratiurl,$tag);
+                    $tag=str_replace('<%TAGURL%>',$this->technoratiurl,$tag);
                 }
-                $tag=str_replace('%d',$displayed_tag,$tag);
+                $tag=str_replace('<%d%>',$displayed_tag,$tag);
                 $list.=$tag;
                 /* If this isn't the last tag, append the seperator */
                 if ($i < count($tags)-1){
                     $list.=$separator;
                 }
             }
-            $content = str_replace('%l',$list,$content);
+            $content = str_replace('<%l%>',$list,$content);
 
             echo $content;
         }
