@@ -7,6 +7,13 @@
 require_once(dirname(__FILE__)."/php-delicious/php-delicious.inc.php");
 
 class NP_TechnoratiTags extends NucleusPlugin {
+    
+    function getName()     {return 'TechnoratiTags';}
+    function getAuthor()   {return 'Horst Gutmann, mod by Edmond Hui, Adam Harvey';}
+    function getURL()      {return 'http://nucleuscms.org/forum/viewtopic.php?t=15457';}
+    function getVersion()  {return '0.9.8';}
+    function getTableList(){return array($this->tablename);}
+
     function init(){
         $this->tablename = sql_table('plug_technoratitags');
         $this->cachedTagsPerPost = array();
@@ -15,24 +22,6 @@ class NP_TechnoratiTags extends NucleusPlugin {
         $this->deliciousurl = "http://del.icio.us/tag";
         $this->delurl = "";
         $this->delaid = -1;
-
-    }
-
-    function getName() {
-        return 'TechnoratiTags';
-    }
-
-    function getAuthor()  {
-        return 'Horst Gutmann, mod by Edmond Hui, Adam Harvey';
-    }
-
-    function getURL()
-    {
-        return 'http://nucleuscms.org/forum/viewtopic.php?t=15457';
-    }
-
-    function getVersion() {
-        return '0.9.8';
     }
 
     function getDescription() {
@@ -43,7 +32,7 @@ class NP_TechnoratiTags extends NucleusPlugin {
         return array(
             'AddItemFormExtras',
             'EditItemFormExtras',
-                        'PreDeleteItem',
+            'PreDeleteItem',
             'PostDeleteItem',
             'PostAddItem',
             'PreUpdateItem',
@@ -96,14 +85,6 @@ class NP_TechnoratiTags extends NucleusPlugin {
         if ($this->getOption('Cleanup') == 'yes'){
             sql_query('DROP TABLE '.$this->tablename);
         }
-    }
-
-    /**
-     * Returns array of tables to be additionally included in the
-     * backup process
-     */
-    function getTableList(){
-        return array($this->tablename);
     }
 
     /**
@@ -164,7 +145,7 @@ class NP_TechnoratiTags extends NucleusPlugin {
         $query = "SELECT t.tags FROM ".$this->tablename . " as t";
         
         if ($blogid != 0) {
-                $query .= ", ". sql_table('item') . " as i WHERE t.itemid = i.inumber and i.idraft != 1 and i.iblog = ". $blogid;
+            $query .= ", ". sql_table('item') . " as i WHERE t.itemid = i.inumber and i.idraft != 1 and i.iblog = ". $blogid;
         }
 
         $result = sql_query($query);
@@ -174,7 +155,7 @@ class NP_TechnoratiTags extends NucleusPlugin {
             $arrayCounter = 1;
             while ($row = mysql_fetch_object($result)) {
                 // some tags for whatever reason is empty.... there was a bug fixed...
-                                if ($row->tags == '') continue;
+                if ($row->tags == '') continue;
                 // split out the text field, and join it to the holding array
                 $alltags = array_merge( $alltags, split(" ",$row->tags) );
             }
@@ -185,8 +166,8 @@ class NP_TechnoratiTags extends NucleusPlugin {
 
         $s_perc = $this->getOption('TagShowPercentage');
         if ($s_perc < 100) {
-                $show = count($tagcloud) / 100 * $s_perc;
-                $tagcloud = array_slice($tagcloud, 0, $show, true);
+            $show = count($tagcloud) / 100 * $s_perc;
+            $tagcloud = array_slice($tagcloud, 0, $show, true);
         }
 
         /*
@@ -200,12 +181,12 @@ class NP_TechnoratiTags extends NucleusPlugin {
      */
     function event_AddItemFormExtras($data){
         $output = <<<EOD
-        <h3>Technorati/del.icio.us Tags</h3>
-        <p>
-            <label for="plugin_technoratitags_field">Tags:</label>
-            <input class="adminTags" type="text" autocomplete="off" name="plugin_technoratitags_field" size="40" id="adminTags"/>
-            <script>actb(document.getElementById('adminTags'), collection)</script>
-        </p>
+<h3>Technorati/del.icio.us Tags</h3>
+<p>
+    <label for="plugin_technoratitags_field">Tags:</label>
+    <input class="adminTags" type="text" autocomplete="off" name="plugin_technoratitags_field" size="40" id="adminTags"/>
+    <script>actb(document.getElementById('adminTags'), collection)</script>
+</p>
 EOD;
         echo $output;
     }
@@ -215,12 +196,12 @@ EOD;
      */
     function event_EditItemFormExtras($data){
         $output = <<<EOD
-        <h3>Technorati/del.icio.us Tags</h3>
-        <p>
-            <label for="plugin_technoratitags_field">Tags:</label>
-            <input class="adminTags" type="text" autocomplete="off" name="plugin_technoratitags_field" size="40" id="adminTags" value="{TAGS}"/>
-            <script>actb(document.getElementById('adminTags'), collection)</script>
-        </p>
+<h3>Technorati/del.icio.us Tags</h3>
+<p>
+    <label for="plugin_technoratitags_field">Tags:</label>
+    <input class="adminTags" type="text" autocomplete="off" name="plugin_technoratitags_field" size="40" id="adminTags" value="{TAGS}"/>
+    <script>actb(document.getElementById('adminTags'), collection)</script>
+</p>
 
 EOD;
         $tags = $this->getTags($data['itemid']);
@@ -262,8 +243,8 @@ EOD;
 
             // only tag the post on delicious if tag is set
             if ($user != '' && $password !='' && isset($tag_arr)) {
-                    $oPhpDelicious = new PhpDelicious($user, $password);
-                    $oPhpDelicious->AddPost($url, $title, '', $tag_arr);
+                $oPhpDelicious = new PhpDelicious($user, $password);
+                $oPhpDelicious->AddPost($url, $title, '', $tag_arr);
             }
         }
     }
@@ -312,10 +293,10 @@ EOD;
             if ($user != '' && $password != '') {
                 $oPhpDelicious = new PhpDelicious($user, $password);
                 if(isset($tag_arr)) {
-                                    $oPhpDelicious->AddPost($url, $title, '', $tag_arr);
+                    $oPhpDelicious->AddPost($url, $title, '', $tag_arr);
                 } else {
                     // remove the link is no tag for this post, link with no tag is just useless
-                                    $oPhpDelicious->DeletePost($url);
+                    $oPhpDelicious->DeletePost($url);
                 }
             }
         }
@@ -323,10 +304,10 @@ EOD;
 
     // need to get url and authorid before we delete the item....
     function event_PreDeleteItem($data) {
-            global $manager;
-            $this->delurl = createItemLink($data['itemid']);
-            $item = &$manager->getItem($data['itemid'], 0, 0);
-            $this->delaid = $item['authorid'];
+        global $manager;
+        $this->delurl = createItemLink($data['itemid']);
+        $item = &$manager->getItem($data['itemid'], 0, 0);
+        $this->delaid = $item['authorid'];
     }
 
     /**
@@ -391,10 +372,10 @@ EOD;
             }
             $content = str_replace('%l',$list,$content);
             if ($this->getOption('AppendTagType') == 0) {
-                    $content = str_replace('%TAGURL%',$this->technoratiurl, $content);
+                $content = str_replace('%TAGURL%',$this->technoratiurl, $content);
             }
             else {
-                    $content = str_replace('%TAGURL%',$this->deliciousurl, $content);
+                $content = str_replace('%TAGURL%',$this->deliciousurl, $content);
             }
             $body = $body.$content;
         }
@@ -444,12 +425,12 @@ EOD;
 
                 for($i = 0 ; $i<count($tags) ; $i++){
                     $t = $tags[$i];
-                                        if ($this->getOption('PlusSwitch') == 'yes'){
-                                                $displayed_tag = str_replace('+',' ',$t);
-                                        }
-                                        else {
-                                                $displayed_tag = $t;
-                                        }
+                    if ($this->getOption('PlusSwitch') == 'yes'){
+                        $displayed_tag = str_replace('+',' ',$t);
+                    }
+                    else {
+                        $displayed_tag = $t;
+                    }
                     if ($t == '') continue;
                     echo "<category>" . $displayed_tag . "</category>";
                 }
@@ -482,9 +463,9 @@ EOD;
                 }
                 $tag=str_replace('%t',$t,$itemlook);
 
-                                if ($what=="dtag") {
-                        $tag=str_replace('%TAGURL%',$this->deliciousurl,$tag);
-                                }
+                if ($what=="dtag") {
+                    $tag=str_replace('%TAGURL%',$this->deliciousurl,$tag);
+                }
                 else if ($what=="ltag") {
                     $link = $blog->getURL();
                     if (substr($link, -1) != '/') {
@@ -655,7 +636,7 @@ EOD;
             $separator = $this->getOption('TagSeparator');
 
             foreach ($newtags as $curtag=>$level) {
-                                $count = "";
+                $count = "";
 
                 if ($level == 3)  { echo "<span class=\"largeT\">"; $lc++; }
                 else if ($level == 2) { echo "<span class=\"mediumT\">"; $mc++; }
@@ -673,11 +654,12 @@ EOD;
                     $displayed_tag = $curtag;
                 }
 
+                $style = 'background: none;padding: 0px; margin: 0px; text-decoration: none;';
                 if ($type == 'cloud') {
-                    echo "<a href=\"" . $this->technoratiurl . "/$curtag\" title=\"Find tag $curtag on Technorati\" style=\"background: none;padding: 0px; margin: 0px; text-decoration: none;\">" . $displayed_tag . $count."</a>";
+                    echo "<a href=\"" . $this->technoratiurl . "/$curtag\" title=\"Find tag $curtag on Technorati\" style=\"$style\">" . $displayed_tag . $count."</a>";
                 }
                 else if ($type == 'dcloud') {
-                    echo "<a href=\"" . $this->deliciousurl . "/$curtag\" title=\"Find tag $curtag on del.icio.us\" style=\"background: none;padding: 0px; margin: 0px; text-decoration: none;\">".$displayed_tag.$count."</a>";
+                    echo "<a href=\"" . $this->deliciousurl . "/$curtag\" title=\"Find tag $curtag on del.icio.us\" style=\"$style\">".$displayed_tag.$count."</a>";
                 } else {
                     if ($CONF['URLMode'] == 'pathinfo') {
                         $link = $blog->getURL();
@@ -689,7 +671,7 @@ EOD;
                             $link .= "&blogid=" . $blog->getId();
                         }
                     }
-                    echo "<a href=\"" . $link . "\" style=\"background: none;padding: 0px; margin: 0px; text-decoration: none;\">".$displayed_tag.$count."</a>";
+                    echo "<a href=\"" . $link . "\" style=\"$style\">".$displayed_tag.$count."</a>";
                 }
                 echo "</span>\n"; // finish it off
             }
@@ -724,13 +706,13 @@ EOD;
         $this->init_AC();
 
         if (($data['action'] != 'itemedit') && ($data['action'] != 'createitem'))
-         return;
+            return;
 
         $tag_array = $this->tag_array;
         $tag_string = '';
 
         foreach ($tag_array as $tag ) {
-              $tag_string = $tag_string ? $tag_string . ',' . '"'.$tag.'"' : '"'.$tag.'"';
+            $tag_string = $tag_string ? $tag_string . ',' . '"'.$tag.'"' : '"'.$tag.'"';
         }
 
         $data['extrahead'] .= '<script type="text/javascript">var collection = new Array('.$tag_string .');</script>';
@@ -747,8 +729,7 @@ EOD;
 // updated with fix 2016-02-08
 //
     function event_BookmarkletExtraHead(&$data) {
-            $data['action'] = 'createitem';
-            $this->event_AdminPrePageHead($data);
+        $data['action'] = 'createitem';
+        $this->event_AdminPrePageHead($data);
     }
 }
-?>
