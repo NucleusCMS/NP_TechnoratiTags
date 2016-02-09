@@ -350,24 +350,20 @@ EOD;
             $content = $this->getOption('ListLook');
             $itemlook = $this->getOption('TagLook');
             $separator = $this->getOption('TagSeparator');
-            $list = "";
-            for($i = 0 ; $i<count($tags) ; $i++){
-                $t = $tags[$i];
-                if ($t == '') continue;
+            $list = array();
+            foreach($tags as $tag){
+                if ($tag == '') continue;
                 if ($this->getOption('PlusSwitch') == 'yes'){
-                    $displayed_tag = str_replace('+','&nbsp;',$t);
+                    $displayed_tag = str_replace('+','&nbsp;',$tag);
                 }
                 else {
-                    $displayed_tag = $t;
+                    $displayed_tag = $tag;
                 }
-                $tag=str_replace('<%t%>',$t,$itemlook);
+                $tag=str_replace('<%t%>',$tag,$itemlook);
                 $tag=str_replace('<%d%>',$displayed_tag,$tag);
-                $list.=$tag;
-                /* If this isn't the last tag, append the seperator */
-                if ($i < count($tags)-1){
-                    $list.=$separator;
-                }
+                $list[] = $tag;
             }
+            $list = join($separator,$list);
             $content = str_replace('<%l%>',$list,$content);
             if ($this->getOption('AppendTagType') == 0) {
                 $content = str_replace('<%TAGURL%>',$this->technoratiurl, $content);
