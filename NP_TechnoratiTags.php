@@ -28,7 +28,7 @@ class NP_TechnoratiTags extends NucleusPlugin {
 
     function getURL()
     {
-        return 'http://forum.nucleuscms.org/viewtopic.php?t=15457';
+        return 'http://nucleuscms.org/forum/viewtopic.php?t=15457';
     }
 
     function getVersion() {

@@ -24,6 +24,11 @@ Repository URL
 
 https://github.com/NucleusCMS/NP_TechnoratiTags
 
+Support
+-------------------------------
+
+http://nucleuscms.org/forum/viewtopic.php?t=15457
+
 License
 -------------------------------
 
