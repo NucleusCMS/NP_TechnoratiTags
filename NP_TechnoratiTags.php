@@ -3,12 +3,6 @@
  * NP_TechnoratiTags Plugin for NucleusCMS
  */
 
-if (!function_exists('sql_table')){
-	function sql_table($name){
-		return 'nucleus_'.$name;
-	}
-}
-
 // Class to talk to del.icio.us
 require_once(dirname(__FILE__)."/php-delicious/php-delicious.inc.php");
 
