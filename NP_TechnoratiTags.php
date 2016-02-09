@@ -11,7 +11,7 @@ class NP_TechnoratiTags extends NucleusPlugin {
     function getName()     {return 'TechnoratiTags';}
     function getAuthor()   {return 'Horst Gutmann, mod by Edmond Hui, Adam Harvey';}
     function getURL()      {return 'http://nucleuscms.org/forum/viewtopic.php?t=15457';}
-    function getVersion()  {return '0.9.8';}
+    function getVersion()  {return '0.9.9';}
     function getTableList(){return array($this->tablename);}
 
     function init(){
