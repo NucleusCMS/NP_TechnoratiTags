@@ -105,14 +105,13 @@ class NP_TechnoratiTags extends NucleusPlugin {
              * Error check the query
              */
             if (!$result) {
-                // return array("Error: " . mysql_error() );
                 return array("<i>Could not load tags</i>");
             }
-            while($row = mysql_fetch_object($result)){
+            while($row = sql_fetch_object($result)){
                 $row->tags = explode(' ',$row->tags);
                 $this->cachedTagsPerPost[$row->itemid]=$row->tags;
             }
-            mysql_free_result($result);
+            sql_free_result($result);
             $this->queried = TRUE;
         }
         if (!array_key_exists($itemID,$this->cachedTagsPerPost)){
@@ -153,13 +152,13 @@ class NP_TechnoratiTags extends NucleusPlugin {
             return array("Error=$result");
         } else {
             $arrayCounter = 1;
-            while ($row = mysql_fetch_object($result)) {
+            while ($row = sql_fetch_object($result)) {
                 // some tags for whatever reason is empty.... there was a bug fixed...
                 if ($row->tags == '') continue;
                 // split out the text field, and join it to the holding array
                 $alltags = array_merge( $alltags, split(" ",$row->tags) );
             }
-            mysql_free_result($result);
+            sql_free_result($result);
         }
 
         $tagcloud = array_count_values( $alltags );
@@ -226,7 +225,6 @@ EOD;
 
 
         /* Let's do some cleanup, just in case :-) */
-        //$tags = mysql_escape_string(htmlspecialchars(urldecode($tags))); NEED TO FIX THIS AND ADD THE SAME TO event_PreUpdateItem()
         sql_query("INSERT INTO ".$this->tablename." (itemid,tags) VALUES (".$itemid.",'".$tags."')");
 
         if ($this->getOption('DelIcioUs') == "yes") {
@@ -266,10 +264,10 @@ EOD;
 
         /* First check if there is already a row for this post */
         $result = sql_query("SELECT * FROM ".$this->tablename." WHERE itemid=".$data['itemid']);
-        if (mysql_num_rows($result) > 0){
+        if (sql_num_rows($result) > 0){
             $mode = 'update';
         }
-        mysql_free_result($result);
+        sql_free_result($result);
         if ($mode == 'insert'){
             $query = "INSERT INTO ".$this->tablename." (itemid,tags) VALUES (".$itemid.",'".$tags."')";
         } // insert
@@ -578,7 +576,7 @@ EOD;
             $res = sql_query($query);
             echo "<br /><br /><ul>";
 
-            while ($row = mysql_fetch_object($res)){
+            while ($row = sql_fetch_object($res)){
                     $link = createItemLink($row->itemid);
                     echo "<li><a href=\"" . $link . "\">" . $row->ititle . "</a></li>";
             }
@@ -689,13 +687,13 @@ EOD;
         $query = "SELECT tags FROM `" . $this->tablename . "`";
         $result = sql_query($query);
 
-        while ($row = mysql_fetch_object($result)) {
+        while ($row = sql_fetch_object($result)) {
             if ($row->tags == "") continue;
             // split out the text field, and join it to the holding array
             $this->tag_array = array_unique(array_merge($this->tag_array, split(" ",$row->tags)));
             if (sizeof($this->tag_array) > $maxTags) break;
         }
-        mysql_free_result($result);
+        sql_free_result($result);
         $this->tag_array = array_slice($this->tag_array, 0, $maxTags, true);
 
     }
