@@ -61,9 +61,9 @@ class NP_TechnoratiTags extends NucleusPlugin {
             default:
                 return 0;
         }
-    }    
+    }
 
-    /** 
+    /**
      * Creates the technoratitags table if it doesn't exist yet
      */
     function install(){
@@ -88,8 +88,8 @@ class NP_TechnoratiTags extends NucleusPlugin {
         $this->createOption("maxTags", "Number of Tags to hold in memory for tag auto completion", "text", "200");
     }
     
-    /** 
-     * Asks the user if the technoratitags table should be deleted 
+    /**
+     * Asks the user if the technoratitags table should be deleted
      * and deletes it if yes
      */
     function unInstall(){
@@ -98,16 +98,16 @@ class NP_TechnoratiTags extends NucleusPlugin {
         }
     }
 
-    /** 
-     * Returns array of tables to be additionally included in the 
+    /**
+     * Returns array of tables to be additionally included in the
      * backup process
      */
     function getTableList(){
         return array($this->tablename);
     }
 
-    /** 
-     * Returns the tag-string from the database for the given 
+    /**
+     * Returns the tag-string from the database for the given
      * $postID
      * @return array of tags
      */
@@ -146,7 +146,7 @@ class NP_TechnoratiTags extends NucleusPlugin {
         }
     }
 
-    /** 
+    /**
      * Returns all tags
      * @author Adam Harvey
      * @return 2d array of all tags and their usage counts
@@ -158,7 +158,7 @@ class NP_TechnoratiTags extends NucleusPlugin {
         /**
           * Can't do this via sql because multiple tags for a single post are stored in a single field... grr.
           * ex: $result = sql_query('SELECT tags, count(tags) tagcount FROM '.$this->tablename.' GROUP BY tags');
-          * Could even use TOP 5 to limit the query if so.          
+          * Could even use TOP 5 to limit the query if so.
           * Instead, have to do this manually.
           */
                 $query = "SELECT t.tags FROM ".$this->tablename . " as t";
@@ -229,8 +229,8 @@ EOD;
         echo $output;
     }
 
-    /** 
-     * Create a new row for tags of this post 
+    /**
+     * Create a new row for tags of this post
      */
     function event_PostAddItem($data){
         $itemid = $data['itemid'];
@@ -269,13 +269,13 @@ EOD;
                 }
     }
 
-    /** 
-     * There seems to be no PostUpdateItem event so here we go 
+    /**
+     * There seems to be no PostUpdateItem event so here we go
      */
     function event_PreUpdateItem($data){
         $mode = 'insert';
         $itemid = $data['itemid'];
-        $tags = requestVar('plugin_technoratitags_field');        
+        $tags = requestVar('plugin_technoratitags_field');
 
         if ($tags != '') {
             $tag_arr = array();
@@ -291,7 +291,7 @@ EOD;
         }
         mysql_free_result($result);
         if ($mode == 'insert'){
-            $query = "INSERT INTO ".$this->tablename." (itemid,tags) VALUES (".$itemid.",'".$tags."')";    
+            $query = "INSERT INTO ".$this->tablename." (itemid,tags) VALUES (".$itemid.",'".$tags."')";
         } // insert
         else {
             $query = "UPDATE ".$this->tablename." SET tags = '".$tags."' WHERE itemid = ".$itemid;
@@ -543,7 +543,7 @@ EOD;
                     $tag = mb_convert_encoding($temp[$i], _CHARSET, _CHARSET);
                     $tag = rawurldecode($tag);
                 } else {
-                    // This will not work for UTF-8 tag..... not something 
+                    // This will not work for UTF-8 tag..... not something
                     // we can fix unless we bundle mb_convert_encoding()
                     $tag = urlencode($temp[$i]);
                 }
@@ -553,7 +553,7 @@ EOD;
                     $i++;
                     $blogid = $temp[$i];
                 }
-                        } 
+                        }
                         else {
                                 $tag = str_replace(' ','+',RequestVar('tag'));
                                 if (function_exists('mb_convert_encoding')) {
@@ -561,7 +561,7 @@ EOD;
                                          $tag = rawurldecode($tag);
                                 }
                                 else {
-                                         // This will not work for UTF-8 tag..... not something 
+                                         // This will not work for UTF-8 tag..... not something
                                          // we can fix unless we bundle mb_convert_encoding()
                                          $tag = urlencode($tag);
                                 }
@@ -582,7 +582,7 @@ EOD;
 
                         // **** need better than tags like %% ??? *****
                         $query = "select t.itemid, i.ititle from " . $this->tablename . " as t, ". sql_table('item')
-                                 . " as i where tags like \"%" . $tag . "%\" and t.itemid = i.inumber and i.idraft != 1 "; 
+                                 . " as i where tags like \"%" . $tag . "%\" and t.itemid = i.inumber and i.idraft != 1 ";
                         if (is_numeric($blogid)) {
                                 $query .= " and i.iblog = " . $blogid;
                         } else {
@@ -592,7 +592,7 @@ EOD;
 
                         $query .= " order by i.itime desc";
 
-                        // else for "all" or anything we will show tagged posts from all blogs.... 
+                        // else for "all" or anything we will show tagged posts from all blogs....
                         // it's a feature, not a bug..... I could have choke it here...
 
                         $res = sql_query($query);
@@ -622,7 +622,7 @@ EOD;
 
             // Show only top x tags override from skinvar
             arsort($tags);
-            if ($maxtags > 0) { 
+            if ($maxtags > 0) {
                 $tags = array_slice($tags, 0, $maxtags, true);
             }
 
@@ -658,7 +658,7 @@ EOD;
             foreach ($newtags as $curtag=>$level) {
                                 $count = "";
 
-                if ($level == 3)  { echo "<span class=\"largeT\">"; $lc++; } 
+                if ($level == 3)  { echo "<span class=\"largeT\">"; $lc++; }
                 else if ($level == 2) { echo "<span class=\"mediumT\">"; $mc++; }
                 else if ($level == 1) { echo "<span class=\"smallT\">"; $sc++; }
                 else { echo "<span class=\"tinyT\">"; $tc++; }
@@ -751,6 +751,6 @@ EOD;
         function event_BookmarkletExtraHead(&$data) {
                 $data['action'] = 'createitem';
                 $this->event_AdminPrePageHead($data);
-        }        
+        }
 }
 ?>
