@@ -79,11 +79,23 @@ Tagging System
 -------------------------------
 
 As of v0.8.2, this plugin has evolved into a functioning tagging system. To implement the tagging system for Nucleus using this plugin, the following steps are needed:
-  - add `<%TechnoratiTags(localcloud)%>` into your skin, likely on the sidebar. This list all tags in the current blog and link to a tag search page to show all posts on a tag.
-  - create a new skin call "tags" from admin menu, you can clone your existing main skin if you want the same look for the local tag search result. Actually you only need the main index skin part.
-  - modify the new skin's main index, replace `<%blog(default/index,10)%>` (or `<%Showblog()%>` & etc) with `<%TechnoratiTags(tagsearch)%>`. This is the search result part that show all posts for a tag
-  - replace the sidebar (if you have any w/ the localcloud skinVar) with `<%TechnoratiTags(localcloud)%>`
-  - create a tags.php in you blog root directory (same place where index.php is) with this [[technoratitagstags.php|content]]. You might need to change the blog URL from blog setting to remove the "/index.php" suffix.
+* add `<%TechnoratiTags(localcloud)%>` into your skin, likely on the sidebar. This list all tags in the current blog and link to a tag search page to show all posts on a tag.
+* create a new skin call "tags" from admin menu, you can clone your existing main skin if you want the same look for the local tag search result. Actually you only need the main index skin part.
+* modify the new skin's main index, replace `<%blog(default/index,10)%>` (or `<%Showblog()%>` & etc) with `<%TechnoratiTags(tagsearch)%>`. This is the search result part that show all posts for a tag
+* replace the sidebar (if you have any w/ the localcloud skinVar) with `<%TechnoratiTags(localcloud)%>`
+* create a tags.php in you blog root directory (same place where index.php is). You might need to change the blog URL from blog setting to remove the "/index.php" suffix.
+
+````
+<?php
+$CONF = array();
+$CONF['Self'] = '.';
+
+include('./config.php');
+
+selectSkin('tags'); // change this if your tag skin is not named tags....
+selector();
+?>
+````
 
 If you are using FancyURL, rename the tags.php file to "tags" and add the following to the .htaccess:
 ````
