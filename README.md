@@ -51,29 +51,22 @@ syntax: `<%TechnoratiTags([tagsearch|cloud|localcloud|dcloud], [pop|alp], x, [cu
 To display the list of posts to a tag: `<%TechnoratiTags(tagsearch)%>`
 To display tagcloud: `<%TechnoratiTags([cloud|localcloud|dcloud], [pop|alp], x, [current|all|y])%>`
 
-###param1
+###param 1
 * **cloud** - display tag cloud that links to Technorati
 * **localcloud** - display tag cloud that links to local posts
 * **dcloud** - display tag cloud that links to del.icio.us
 
-###param2
+###param 2
 * **pop** - sort tags by popularity, from most to less
 * **alp** - sort tags by alphabet
 
-###param3
+###param 3
 * ***num*** - max number of tags to display, **-1** for all tags (note, this may override by the tag % to show plugin option)
 
-###param4
+###param 4
 * **current** - show tags from current blog only
 * **all** - show tags from all blog
 * ***num*** - show tags from a particular blog, ***num*** is blogid
-
-
-
-
-
-
-
 
 Tagging System
 -------------------------------
@@ -138,103 +131,3 @@ To implement the support:
 3. To show the tag @ del.icio.us, change templete var to `<%TechnoratiTags(dcloud)%>`
 4. To show a tagcloud of blog's post to del.icio.us, change skin var for the tag cloud to `<%TechnoratiTags(dcloud,...)%>`
 
-License
--------------------------------
-
-Software License Agreement (BSD License)
-
-Copyright (C) 2005-2006, Edward Eliot.
-All rights reserved.
-   
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-* Redistributions of source code must retain the above copyright
-  notice, this list of conditions and the following disclaimer.
-* Redistributions in binary form must reproduce the above copyright
-  notice, this list of conditions and the following disclaimer in the
-  documentation and/or other materials provided with the distribution.
-* Neither the name of Edward Eliot nor the names of its contributors 
-  may be used to endorse or promote products derived from this software 
-  without specific prior written permission of Edward Eliot.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER AND CONTRIBUTORS "AS IS" AND ANY
-EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-Change Log (started 11/11/2006)
--------------------------------
-
-* V0.5 - 1st public release
-* V0.6 - fixed disappearring + in add item
-* V0.7.1 - added tag cloud
-* V0.8.2 - added tagging system
-* V0.8.3 - added new parameters to control tag sorting and max tags to display
-* V0.8.4 - fix missing formating bug
-* V0.8.5 - add CSS 
-* V0.8.6 - use sql_query 
-* V0.8.7 - minor fix on getTableList()
-* V0.9.0
- * allow per blog tag cloud - current, all, by blogid
- * show tag count
- * option for tag search title
- * outbound tag support to del.icio.us
-* V0.9.1 - fixed broken url when insert tags at the end of post
-* V0.9.2
- * skip tag update to del.icio.us if there is no user/password set
- * fix tag cloud to ensure it displays according to PlusSwitch option
- * rename templete var dcloud switch to dtag
-* V0.9.3
- * fixed UTF-8 multi-bytes encoding problem wih tag search
- * FancyURL support (Thanks Shi!)
- * show popular tag only option
-* V0.9.4
- * tagcloud idle display without tag select
- * ltag templateVar switch to show local tag
-* v0.9.5
- * fix tagsearch result double http link bug
- * error checking for missing blog object in doSkinVar()
- * port NP_AutoComplete by anand to NP_TechnoratiTags, allow tag auto completion
-* v0.9.6
- * optimize auto complete init
- * change list of tag by date decrement
- * fix tag cloud display of draft on search and cloud
- * fix add/delete post incorrect URL
- * fix top tags striping bug (thx Rico)
- * support for multi-blog setup 
-* 13/01/2007:
- * Modified cache to make it username specific
-* 11/11/2006:
- * Added support for notes field in results returned
- * Added LastErrorString() method
- * Replaced LastError() method with LastErrorNo() but kept original as alias for backwards compatibility
- * Added examples for exporting/importing posts to/from MySql (see examples folder)
- * Added example to print a simple table of results (see examples folder)
-
-Public Methods
--------------------------------
-
-* LastErrorNo()
-* LastError (alias for LastErrorNo())
-* LastErrorString()
-* GetLastUpdate()
-* GetAllTags()
-* RenameTag()
-* GetPosts()
-* GetRecentPosts()
-* GetAllPosts()
-* GetDates()
-* AddPost()
-* DeletePost()
-* GetAllBundles()
-* AddBundle()
-* DeleteBundle()
-
-Full documentation for these methods to follow. For now see examples and source for parameters and usage.
