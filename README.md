@@ -79,10 +79,10 @@ Tagging System
 -------------------------------
 
 As of v0.8.2, this plugin has evolved into a functioning tagging system. To implement the tagging system for Nucleus using this plugin, the following steps are needed:
-  - add <%TechnoratiTags(localcloud)%> into your skin, likely on the sidebar. This list all tags in the current blog and link to a tag search page to show all posts on a tag.
+  - add `<%TechnoratiTags(localcloud)%>` into your skin, likely on the sidebar. This list all tags in the current blog and link to a tag search page to show all posts on a tag.
   - create a new skin call "tags" from admin menu, you can clone your existing main skin if you want the same look for the local tag search result. Actually you only need the main index skin part.
-  - modify the new skin's main index, replace <%blog(default/index,10)%> (or <%Showblog()%> & etc) with <%TechnoratiTags(tagsearch)%>. This is the search result part that show all posts for a tag
-  - replace the sidebar (if you have any w/ the localcloud skinVar) with <%TechnoratiTags(localcloud)%>
+  - modify the new skin's main index, replace `<%blog(default/index,10)%>` (or `<%Showblog()%>` & etc) with `<%TechnoratiTags(tagsearch)%>`. This is the search result part that show all posts for a tag
+  - replace the sidebar (if you have any w/ the localcloud skinVar) with `<%TechnoratiTags(localcloud)%>`
   - create a tags.php in you blog root directory (same place where index.php is) with this [[technoratitagstags.php|content]]. You might need to change the blog URL from blog setting to remove the "/index.php" suffix.
 
 If you are using FancyURL, rename the tags.php file to "tags" and add the following to the .htaccess:
@@ -112,6 +112,19 @@ To customize the tagcloud's looks add the following to skin's CSS file:
 .largeT { font-size:20px; font-weight: bold;}
 ````
 
+
+del.icio.us Support
+-------------------------------
+New to v0.9.0, del.icio.us is supported, the following is possible:
+* show tags and link to del.icio.us
+* tag a new blog post to del.icio.us
+
+To implement the support:
+-------------------------------
+1. go to plugin option set "Add post to each tag in del.icio.us? (user need to set his/her login & password from member setting)" to yes
+2. go to member setting and set the user and password to add post to your del.icio.us account
+3. To show the tag @ del.icio.us, change templete var to `<%TechnoratiTags(dcloud)%>`
+4. To show a tagcloud of blog's post to del.icio.us, change skin var for the tag cloud to `<%TechnoratiTags(dcloud,...)%>`
 
 License
 -------------------------------
@@ -147,6 +160,43 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 Change Log (started 11/11/2006)
 -------------------------------
 
+* V0.5 - 1st public release
+* V0.6 - fixed disappearring + in add item
+* V0.7.1 - added tag cloud
+* V0.8.2 - added tagging system
+* V0.8.3 - added new parameters to control tag sorting and max tags to display
+* V0.8.4 - fix missing formating bug
+* V0.8.5 - add CSS 
+* V0.8.6 - use sql_query 
+* V0.8.7 - minor fix on getTableList()
+* V0.9.0
+ * allow per blog tag cloud - current, all, by blogid
+ * show tag count
+ * option for tag search title
+ * outbound tag support to del.icio.us
+* V0.9.1 - fixed broken url when insert tags at the end of post
+* V0.9.2
+ * skip tag update to del.icio.us if there is no user/password set
+ * fix tag cloud to ensure it displays according to PlusSwitch option
+ * rename templete var dcloud switch to dtag
+* V0.9.3
+ * fixed UTF-8 multi-bytes encoding problem wih tag search
+ * FancyURL support (Thanks Shi!)
+ * show popular tag only option
+* V0.9.4
+ * tagcloud idle display without tag select
+ * ltag templateVar switch to show local tag
+* v0.9.5
+ * fix tagsearch result double http link bug
+ * error checking for missing blog object in doSkinVar()
+ * port NP_AutoComplete by anand to NP_TechnoratiTags, allow tag auto completion
+* v0.9.6
+ * optimize auto complete init
+ * change list of tag by date decrement
+ * fix tag cloud display of draft on search and cloud
+ * fix add/delete post incorrect URL
+ * fix top tags striping bug (thx Rico)
+ * support for multi-blog setup 
 * 13/01/2007:
  * Modified cache to make it username specific
 * 11/11/2006:
