@@ -657,8 +657,9 @@ EOD;
                         $link = $blog->getURL();
                         $link .=  '/tags/' . $curtag;
                     } else {
-                        $link = $CONF['Self'] . '/';
-                        $link .= 'tags.php?tag=' . $curtag;
+                        $self = rtrim(str_replace('index.php','',$CONF['Self']),'/').'/';
+                        if($self==='/') $self = './';
+                        $link = "{$self}tags.php?tag={$curtag}";
                         if ($blog->getId() != 1) {
                             $link .= "&blogid=" . $blog->getId();
                         }
