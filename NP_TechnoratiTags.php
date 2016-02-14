@@ -462,8 +462,10 @@ EOD;
                 }
                 else if ($what=="ltag") {
                     $link = $blog->getURL();
-                    if (substr($link, -4) != '.php') {
-                        $link = rtrim($link.'/') . '/';
+                    if (substr($link, -1) != '/') {
+                        if (substr($link, -4) != '.php') {
+                            $link .= '/';
+                        }
                     }
                     if ($CONF['URLMode'] == 'pathinfo') {
                         $link .=  'tags/';
