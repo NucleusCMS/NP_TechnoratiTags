@@ -156,7 +156,7 @@ class NP_TechnoratiTags extends NucleusPlugin {
                 // some tags for whatever reason is empty.... there was a bug fixed...
                 if ($row->tags == '') continue;
                 // split out the text field, and join it to the holding array
-                $alltags = array_merge( $alltags, split(" ",$row->tags) );
+                $alltags = array_merge( $alltags, explode(' ',$row->tags) );
             }
             sql_free_result($result);
         }
@@ -687,7 +687,7 @@ EOD;
         while ($row = sql_fetch_object($result)) {
             if ($row->tags == "") continue;
             // split out the text field, and join it to the holding array
-            $this->tag_array = array_unique(array_merge($this->tag_array, split(" ",$row->tags)));
+            $this->tag_array = array_unique(array_merge($this->tag_array, explode(' ',$row->tags)));
             if (sizeof($this->tag_array) > $maxTags) break;
         }
         sql_free_result($result);
