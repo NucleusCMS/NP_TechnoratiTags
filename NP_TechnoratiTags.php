@@ -43,14 +43,7 @@ class NP_TechnoratiTags extends NucleusPlugin {
         );
     }
 
-    function supportsFeature($f){
-        switch($f){
-            case 'SqlTablePrefix':
-                return 1;
-            default:
-                return 0;
-        }
-    }
+    function supportsFeature($what) {return in_array($what,array('SqlTablePrefix','SqlApi'));}
 
     /**
      * Creates the technoratitags table if it doesn't exist yet
