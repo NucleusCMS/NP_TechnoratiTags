@@ -49,7 +49,7 @@
    define('ERR_UNKNOWN', 5);
    
    // del.icio.us requires a custom user agent string - standard ones are likely to result in you being blocked
-   ini_set('user_agent', 'PhpDelicious v1.5 (http://www.ejeliot.com/pages/php-delicious)');
+   //ini_set('user_agent', 'PhpDelicious v1.5 (http://www.ejeliot.com/pages/php-delicious)');
    
    class PhpDelicious {
       var $sUsername; // your del.icio.us username
@@ -60,7 +60,7 @@
       var $iLastError = 0;
       
       /************************ constructor ************************/
-      function PhpDelicious($sUsername, $sPassword, $iCacheTime = 10) {
+      function __construct($sUsername, $sPassword, $iCacheTime = 10) {
          // assign parameters
          $this->sUsername = $sUsername;
          $this->sPassword = $sPassword;
